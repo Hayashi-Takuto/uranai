@@ -1,10 +1,9 @@
-import { cookies } from "next/headers";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { getSupabaseServer } from "@/lib/supabaseServer";
 import { FortuneDashboard } from "@/components/fortune/fortune-dashboard";
 import { FORTUNE_TELLERS } from "@/lib/fortune-tellers";
 
 export default async function Home() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = await getSupabaseServer();
   const {
     data: { user },
   } = await supabase.auth.getUser();

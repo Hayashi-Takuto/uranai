@@ -1,8 +1,7 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
+import { getSupabaseServer } from "@/lib/supabaseServer";
 
 function extractField(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -25,7 +24,7 @@ export async function signUpAction(
     } satisfies AuthFormState;
   }
 
-  const supabase = createServerActionClient({ cookies });
+  const supabase = await getSupabaseServer();
   const { error } = await supabase.auth.signUp({
     email,
     password,
@@ -57,7 +56,7 @@ export async function signInAction(
     } satisfies AuthFormState;
   }
 
-  const supabase = createServerActionClient({ cookies });
+  const supabase = await getSupabaseServer();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {

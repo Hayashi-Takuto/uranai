@@ -1,6 +1,5 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { getSupabaseServer } from "@/lib/supabaseServer";
 import { ReadingResult } from "@/components/fortune/reading-result";
 import { FORTUNE_TELLERS } from "@/lib/fortune-tellers";
 
@@ -10,12 +9,13 @@ type ReadingRow = {
   question: string;
   result: string;
   created_at: string;
+  user_id: string;
 };
 
 export const dynamic = "force-dynamic";
 
 export default async function ReadingsPage() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = await getSupabaseServer();
   const {
     data: { session },
   } = await supabase.auth.getSession();
@@ -25,8 +25,8 @@ export default async function ReadingsPage() {
   }
 
   const { data, error } = await supabase
-    .from<ReadingRow>("readings")
-    .select("id, teller_id, question, result, created_at")
+    .from("readings")
+    .select<string, ReadingRow>("id, teller_id, question, result, created_at")
     .eq("user_id", session.user.id)
     .order("created_at", { ascending: false });
 

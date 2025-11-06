@@ -1,9 +1,9 @@
 "use client";
 
 import { useMemo } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { getSupabaseBrowser } from "@/lib/supabaseBrowser";
 
 export function useSupabaseClient(): SupabaseClient {
-  return useMemo(() => createClientComponentClient(), []);
+  return useMemo(() => getSupabaseBrowser(), []);
 }

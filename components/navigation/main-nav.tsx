@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type MainNavProps = {
-  onSignOut: () => Promise<void>;
+  onSignOut?: () => Promise<void>;
   userEmail?: string | null;
 };
 
@@ -18,6 +18,7 @@ const links = [
 
 export function MainNav({ onSignOut, userEmail }: MainNavProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [pending, startTransition] = useTransition();
 
   return (
@@ -53,16 +54,27 @@ export function MainNav({ onSignOut, userEmail }: MainNavProps) {
       </div>
 
       <div className="flex items-center gap-4">
-        {userEmail && (
-          <span className="text-xs text-iris-200/70">{userEmail}</span>
+        {onSignOut ? (
+          <>
+            {userEmail && (
+              <span className="text-xs text-iris-200/70">{userEmail}</span>
+            )}
+            <Button
+              variant="secondary"
+              loading={pending}
+              onClick={() => startTransition(() => onSignOut())}
+            >
+              サインアウト
+            </Button>
+          </>
+        ) : (
+          <Button
+            variant="secondary"
+            onClick={() => router.push("/login")}
+          >
+            サインイン
+          </Button>
         )}
-        <Button
-          variant="secondary"
-          loading={pending}
-          onClick={() => startTransition(() => onSignOut())}
-        >
-          サインアウト
-        </Button>
       </div>
     </header>
   );

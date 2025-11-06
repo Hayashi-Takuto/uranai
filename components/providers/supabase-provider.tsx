@@ -1,8 +1,8 @@
 "use client";
 
 import { createContext, useContext, useMemo } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { getSupabaseBrowser } from "@/lib/supabaseBrowser";
 
 type SupabaseContextValue = SupabaseClient;
 
@@ -13,7 +13,7 @@ export function SupabaseProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = useMemo(() => createClientComponentClient(), []);
+  const supabase = useMemo(() => getSupabaseBrowser(), []);
 
   return (
     <SupabaseContext.Provider value={supabase}>

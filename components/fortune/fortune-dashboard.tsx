@@ -10,6 +10,7 @@ import { FortuneTellerCard } from "@/components/fortune/fortune-teller-card";
 import { LoadingAurora } from "@/components/fortune/loading-aurora";
 import { ReadingResult } from "@/components/fortune/reading-result";
 import type { FortuneTeller } from "@/components/fortune/types";
+import { useSupabase } from "@/components/providers/supabase-provider";
 
 type ReadingState = {
   teller: FortuneTeller;
@@ -25,6 +26,7 @@ type FortuneDashboardProps = {
 
 export function FortuneDashboard({ tellers, defaultName }: FortuneDashboardProps) {
   const router = useRouter();
+  const supabase = useSupabase();
   const [selectedTeller, setSelectedTeller] = useState(
     () => tellers[0]?.id ?? ""
   );
@@ -44,6 +46,15 @@ export function FortuneDashboard({ tellers, defaultName }: FortuneDashboardProps
     if (!persona) return;
     if (!question.trim()) {
       setError("相談内容を入力してください。");
+      return;
+    }
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      router.push("/login");
       return;
     }
 
