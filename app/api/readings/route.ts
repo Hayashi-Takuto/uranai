@@ -3,6 +3,10 @@ import { getSupabaseServer } from "@/lib/supabaseServer";
 import { openai } from "@/lib/openai";
 import { FORTUNE_TELLERS, getFortunePrompt } from "@/lib/fortune-tellers";
 
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
+
 export async function POST(req: Request) {
   try {
     const { topic, tellerId, clientName } = await req.json();
