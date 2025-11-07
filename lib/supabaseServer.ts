@@ -1,8 +1,10 @@
+// /lib/supabaseServer.ts
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
-export async function getSupabaseServer() {
-  const cookieStore = await cookies() // Next.js 15+ は await 必須
+export function getSupabaseServer() {
+  // cookies() は同期関数。await 不要。
+  const cookieStore = cookies()
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
